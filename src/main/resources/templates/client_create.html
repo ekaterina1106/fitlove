@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Добавить клиента</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Добавьте свой CSS -->
+</head>
+<body>
+<h1>Добавить клиента</h1>
+<form th:action="@{/clients}" th:object="${client}" method="post">
+    <div>
+        <label for="name">Имя:</label>
+        <input type="text" id="name" th:field="*{name}" required />
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" required />
+    </div>
+    <div>
+        <label for="phone">Телефон:</label>
+        <input type="text" id="phone" th:field="*{phone}" />
+    </div>
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" th:field="*{password}" required />
+    </div>
+    <div>
+        <label for="role">Роль:</label>
+        <select id="role" th:field="*{role}" required>
+            <!-- Здесь необходимо заполнять роли, например: -->
+            <option value="USER">Пользователь</option>
+            <option value="ADMIN">Администратор</option>
+            <!-- Добавьте другие роли по мере необходимости -->
+        </select>
+    </div>
+    <button type="submit">Добавить клиента</button>
+    <a href="/clients">Назад</a>
+</form>
+</body>
+</html>
