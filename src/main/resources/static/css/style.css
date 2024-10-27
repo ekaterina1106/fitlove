@@ -1,0 +1,323 @@
+
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif; /* Используем шрифт Poppins */
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url("../images/fit.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    color: #000; /* Устанавливаем черный цвет текста по умолчанию */
+}
+
+/* Стили для header */
+header {
+    background-color: rgba(51, 51, 51, 0.9); /* Полупрозрачный фон для лучшей видимости */
+    color: #fff; /* Цвет текста в заголовке остается белым */
+    padding: 20px 0;
+    position: relative; /* Добавляем для будущих элементов (например, логотипа) */
+    z-index: 1000; /* Убедимся, что header всегда выше */
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Меню */
+.header-page {
+    display: flex; /* Используем flexbox для равномерного распределения */
+    flex-grow: 1; /* Заставляем меню занимать все доступное пространство */
+    justify-content: space-around; /* Равномерное распределение элементов */
+    list-style: none; /* Убираем маркеры списка */
+    padding: 0; /* Убираем отступы */
+    margin: 0; /* Убираем отступы */
+}
+
+.header-page_li {
+    text-align: center; /* Центрируем текст */
+}
+
+.header-page-link {
+    color: #fff; /* Цвет ссылок остается белым */
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px; /* Добавляем внутренние отступы для удобства */
+    transition: color 0.3s; /* Плавный переход цвета при наведении */
+}
+
+.header-page-link:hover {
+    color: #ccc;
+}
+
+/* Кнопка "Личный кабинет" */
+.button {
+    background-color: #7d2ae8; /* Фиолетовый фон */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 6px; /* Обновим радиус до 6px для более мягкого вида */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #6b23d3; /* Более темный фиолетовый при наведении */
+}
+
+.button:active {
+    transform: scale(0.98); /* Легкий эффект нажатия */
+}
+
+/* Стили для основного содержимого */
+main {
+    padding: 40px 20px; /* Добавляем немного боковых отступов */
+    background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон для контраста */
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень для глубины */
+    margin: 20px auto; /* Центрируем основной контент */
+    max-width: 800px; /* Максимальная ширина */
+}
+
+section {
+    text-align: center; /* Центрируем текст внутри секции */
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #000; /* Устанавливаем черный цвет для заголовков */
+    text-transform: uppercase; /* Заглавные буквы */
+    letter-spacing: 1px; /* Расстояние между буквами */
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.8; /* Увеличенный межстрочный интервал для удобочитаемости */
+    color: #000; /* Устанавливаем черный цвет для параграфов */
+    margin: 0 0 20px; /* Отступ снизу для параграфов */
+}
+
+/* Стили для футера */
+footer {
+    background-color: #000; /* Черный фон для футера */
+    color: #fff; /* Белый цвет текста */
+    text-align: center; /* Центрируем текст */
+    padding: 15px 0; /* Отступы для футера */
+    position: relative; /* Относительное позиционирование */
+    bottom: 0; /* Футер внизу страницы */
+    width: 100%; /* Ширина 100% */
+}
+
+/* Стили для формы */
+.input_box input {
+    height: 100%;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 0 30px;
+    color: #333;
+    transition: all 0.2s ease;
+    border-bottom: 1.5px solid #aaaaaa;
+}
+
+.input_box input:focus {
+    border-color: #7d2ae8;
+}
+
+.form_container .button {
+    background: #7d2ae8;
+    margin-top: 30px;
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 10px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: rgba(255, 255, 255, 0.9); /* Полупрозрачный фон */
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+}
+
+thead th {
+    background-color: #7d2ae8; /* Фиолетовый заголовок */
+    color: #fff; /* Белый текст */
+    padding: 10px;
+    text-transform: uppercase; /* Заглавные буквы */
+}
+
+tbody td {
+    padding: 10px;
+    text-align: center; /* Центрирование текста */
+    border: 1px solid #ddd; /* Легкая граница между ячейками */
+    background-color: #f9f9f9; /* Светло-серый фон */
+}
+
+tbody tr:nth-child(even) td {
+    background-color: #f2f2f2; /* Полосатая раскраска строк */
+}
+
+tbody td ul {
+    list-style: none;
+    padding: 0;
+}
+
+tbody td li {
+    margin: 5px 0;
+}
+
+tbody td li span {
+    display: block;
+    font-weight: 500;
+    color: #333; /* Темно-серый для текста */
+}
+
+/* Стили для заголовка времени */
+thead th, tbody td {
+    font-size: 14px;
+}
+
+tbody tr td:first-child {
+    font-weight: bold;
+    color: #000;
+}
+
+/* Стили для модального окна */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.clickable {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+/* Центрируем форму на странице и добавляем отступ сверху */
+.login-page {
+    margin-top: 50px; /* Отступ сверху */
+    text-align: center;
+}
+
+.login-page form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 100%;
+    margin: 0 auto; /* Центрирование формы */
+}
+
+.login-page h1 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.login-page .form-group {
+    margin-bottom: 15px;
+}
+
+.login-page label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.login-page input.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.login-page .login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #7d2ae8;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-page .login-button:hover {
+    background-color: #6b23d3;
+}
+
+/* Убираем стили для кнопок, делаем их текстовыми ссылками в одну строку */
+.login-page .login-links {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.login-page .login-links a {
+    color: #7d2ae8;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 0;
+    border: none;
+    margin: 0 10px; /* Отступ между ссылками */
+    display: inline; /* Располагаем ссылки в одну строку */
+    transition: color 0.3s;
+}
+
+.login-page .login-links a:hover {
+    color: #6b23d3; /* Меняем цвет при наведении */
+}

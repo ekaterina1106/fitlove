@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitlove Fitness Club</title>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}" />
+</head>
+<body>
+<header>
+    <div th:insert="~{blocks/header.html :: header}"></div>
+</header>
+
+<h1>Расписание групповых занятий</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Время</th>
+        <th th:each="date, iterStat : ${weekDates}">
+            <span th:text="${date}"></span>
+            <br />
+            <span th:text="${dayOfWeek[iterStat.index]}"></span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="time : ${times}">
+        <td th:text="${time}"></td> <!-- Строка времени -->
+
+        <td th:each="date : ${weekDates}">
+            <span th:each="class : ${classes}"
+                  th:if="${class.classDate.equals(date) and class.startTime.equals(time)}"
+                  th:attr="data-class-id=${class.id}, data-name=${class.name}, data-description=${class.description}, data-instructor=${class.instructor.name}"
+                  class="clickable"
+                  onclick="openModal(this)">
+                <span th:text="${class.name}"></span> <!-- Название занятия -->
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Модальное окно -->
+<div id="classModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="className"></h2>
+        <p><strong>Описание:</strong> <span id="classDescription"></span></p>
+        <p><strong>Инструктор:</strong> <span id="classInstructor"></span></p>
+
+        <!-- Форма для записи на занятие -->
+        <form id="enrollForm" method="post" th:action="@{/schedule/enroll}">
+            <input type="hidden" id="classId" name="classId" value="">
+            <button type="submit">Записаться</button>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>
+<script>
+    // Функция для открытия модального окна
+    // Функция для открытия модального окна
+    function openModal(element) {
+        var modal = document.getElementById("classModal");
+        var className = element.getAttribute("data-name");
+        var classDescription = element.getAttribute("data-description");
+        var classInstructor = element.getAttribute("data-instructor");
+        var classId = element.getAttribute("data-class-id"); // Получаем ID занятия
+
+        console.log("Class Name:", className); // Для отладки
+        console.log("Class Description:", classDescription); // Для отладки
+        console.log("Class Instructor:", classInstructor); // Для отладки
+        console.log("Class ID:", classId); // Для отладки
+
+        // Проверяем, есть ли значение classId
+        if (classId) {
+            console.log("ID занятия корректен:", classId);
+        } else {
+            console.error("ID занятия отсутствует!");
+        }
+
+        document.getElementById("className").textContent = className;
+        document.getElementById("classDescription").textContent = classDescription;
+        document.getElementById("classInstructor").textContent = classInstructor;
+
+        // Устанавливаем ID занятия в скрытое поле формы
+        document.getElementById("classId").value = classId;
+
+        modal.style.display = "block";
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelector(".close").onclick = function() {
+            document.getElementById("classModal").style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById("classModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Fitlove Fitness Club</title>-->
+<!--    <link rel="stylesheet" href="/css/style.css" />-->
+<!--</head>-->
+<!--<body>-->
+<!--<header>-->
+<!--    <div th:insert="~{blocks/header.html :: header}"></div>-->
+<!--</header>-->
+
+<!--<h1>Расписание групповых занятий</h1>-->
+
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>Время</th>-->
+<!--        <th th:each="date, iterStat : ${weekDates}">-->
+<!--            <span th:text="${date}"></span>-->
+<!--            <br>-->
+<!--            <span th:text="${dayOfWeek[iterStat.index]}"></span>-->
+<!--        </th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="time : ${times}">-->
+<!--        <td th:text="${time}"></td> &lt;!&ndash; Строка времени &ndash;&gt;-->
+<!--        <td th:each="date : ${weekDates}">-->
+<!--            <span th:each="class : ${classes}"-->
+<!--                  th:if="${class.classDate.equals(date) and class.startTime.equals(time)}"-->
+<!--                  th:attr="data-name=${class.name}, data-description=${class.description}, data-instructor=${class.instructor.name}"-->
+<!--                  class="clickable"-->
+<!--                  onclick="openModal(this)"-->
+<!--                  th:text="${class.name}"></span> &lt;!&ndash; Кликабельная ячейка &ndash;&gt;-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+
+<!--&lt;!&ndash; Модальное окно &ndash;&gt;-->
+<!--<div id="classModal" class="modal" style="display:none;">-->
+<!--    <div class="modal-content">-->
+<!--        <span class="close">&times;</span>-->
+<!--        <h2 id="className"></h2>-->
+<!--        <p><strong>Описание:</strong> <span id="classDescription"></span></p>-->
+<!--        <p><strong>Инструктор:</strong> <span id="classInstructor"></span></p>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+<!--</body>-->
+<!--</html>-->
+
+<!--<script>-->
+<!--    // Функция для открытия модального окна-->
+<!--    function openModal(element) {-->
+<!--        var modal = document.getElementById("classModal");-->
+<!--        document.getElementById("className").textContent = element.getAttribute("data-name");-->
+<!--        document.getElementById("classDescription").textContent = element.getAttribute("data-description");-->
+<!--        document.getElementById("classInstructor").textContent = element.getAttribute("data-instructor");-->
+<!--        modal.style.display = "block";-->
+<!--    }-->
+
+<!--    // Функция для закрытия модального окна-->
+<!--    document.querySelector(".close").onclick = function() {-->
+<!--        document.getElementById("classModal").style.display = "none";-->
+<!--    }-->
+
+<!--    // Закрытие окна при клике вне его-->
+<!--    window.onclick = function(event) {-->
+<!--        var modal = document.getElementById("classModal");-->
+<!--        if (event.target == modal) {-->
+<!--            modal.style.display = "none";-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Fitlove Fitness Club</title>-->
+<!--    <link rel="stylesheet" href="/css/style.css" />-->
+<!--</head>-->
+<!--<body>-->
+<!--<header>-->
+<!--    <div th:insert="~{blocks/header.html :: header}"></div>-->
+<!--</header>-->
+
+<!--<h1>Расписание групповых занятий</h1>-->
+
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>Время</th> &lt;!&ndash; Строки будут временем &ndash;&gt;-->
+<!--        <th th:each="date, iterStat : ${weekDates}">-->
+<!--            <span th:text="${date}"></span> &lt;!&ndash; Отображение даты &ndash;&gt;-->
+<!--            <br>-->
+<!--            <span th:text="${dayOfWeek[iterStat.index]}"></span> &lt;!&ndash; Отображение дня недели &ndash;&gt;-->
+<!--        </th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="time : ${times}">-->
+<!--        <td th:text="${time}"></td> &lt;!&ndash; Строка времени &ndash;&gt;-->
+<!--        <td th:each="date : ${weekDates}">-->
+<!--            <span th:each="class : ${classes}"-->
+<!--                  th:if="${class.classDate.equals(date) and class.startTime.equals(time)}"-->
+<!--                  th:text="${class.name}"></span>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+
+
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
