@@ -2,9 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Редактировать клиента</title>
-    <link rel="stylesheet" href="/css/style.css"> <!-- Добавьте свой CSS -->
+    <link rel="stylesheet" th:href="@{/static/css/style.css}" />
 </head>
 <body>
+<header>
+    <div th:insert="~{blocks/header.html :: header}"></div>
+</header>
 <h1>Редактировать клиента</h1>
 <form th:action="@{/clients/{id}(id=${client.id})}" th:object="${client}" method="post">
     <div>
@@ -23,14 +26,6 @@
     <div>
         <label for="password">Пароль:</label>
         <input type="password" id="password" th:field="*{password}" required />
-    </div>
-    <div>
-        <label for="role">Роль:</label>
-        <select id="role" th:field="*{role}" required>
-            <option value="USER" th:selected="${client.role == 'USER'}">Пользователь</option>
-            <option value="ADMIN" th:selected="${client.role == 'ADMIN'}">Администратор</option>
-            <!-- Добавьте другие роли по мере необходимости -->
-        </select>
     </div>
     <button type="submit">Сохранить изменения</button>
     <a href="/clients">Назад</a>

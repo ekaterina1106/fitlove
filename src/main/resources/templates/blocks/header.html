@@ -1,63 +1,64 @@
-<!--<html xmlns:th="http://www.thymeleaf.org" >-->
-<!--<div th:fragment="header">-->
-<!--    <div class="container main-container">-->
-<!--        <li class="header-page_li">-->
-<!--            <a class="header-page-link" href="/classes">-->
-<!--                <span class="header-page-text">Занятия</span>-->
-<!--            </a>-->
-<!--        </li>-->
-
-<!--        <li class="header-page_li">-->
-<!--            <a class="header-page-link" href="/clients">-->
-<!--                <span class="header-page-text">Клиенты</span>-->
-<!--            </a>-->
-<!--        </li>-->
-
-<!--        <li class="header-page_li">-->
-<!--            <a class="header-page-link" href="/main">-->
-<!--                <span class="header-page-text">ГЛАВНАЯ</span>-->
-<!--            </a>-->
-<!--        </li>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-<!--<head>-->
-<!--    <meta charset="UTF-8" />-->
-<!--    <meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
-<!--    <title>Website with Login & Registration Form</title>-->
-<!--    <link rel="stylesheet" href="style.css" />-->
-<!--    &lt;!&ndash; Unicons &ndash;&gt;-->
-<!--    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />-->
-<!--</head>-->
-
-
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="header">
     <div class="container main-container">
-        <li class="header-page_li">
-            <a class="header-page-link" href="/classes">
-                <span class="header-page-text">Занятия</span>
-            </a>
-        </li>
+        <ul class="header-page">
 
-        <li class="header-page_li">
-            <a class="header-page-link" href="/clients">
-                <span class="header-page-text">Клиенты</span>
-            </a>
-        </li>
-
-        <li class="header-page_li">
-            <a class="header-page-link" href="/main">
-                <span class="header-page-text">ГЛАВНАЯ</span>
-            </a>
-        </li>
+            <div th:if="${client != null}">
+                <!-- Показывается, если клиент авторизован -->
+                <p>Добро пожаловать, <span th:text="${client.name}">Имя клиента</span>!</p>
+            </div>
+            <div th:if="${client == null}">
+                <p>hfdgjhdjfghgh</p>>
+                <!-- Показывается, если клиент не авторизован -->
+            </div>
 
 
+            <!-- Главная страница доступна всем пользователям -->
+            <li class="header-page_li">
+                <a class="header-page-link" href="/main">
+                    <span class="header-page-text">Главная</span>
+                </a>
+            </li>
 
-        <button class="button" id="form-open">Login</button>
+            <!-- Страница Занятий НЕ отображается для пользователей с ролью USER -->
+            <li class="header-page_li" th:if="${client.isAdmin}">
+                <a class="header-page-link" href="/classes">
+                    <span class="header-page-text">Занятия</span>
+                </a>
+            </li>
+
+<!--            <div th:if="${client.isAdmin}">-->
+<!--                &lt;!&ndash; Контент, который будет виден только администратору &ndash;&gt;-->
+<!--                <p>Добро пожаловать, администратор!</p>-->
+<!--            </div>-->
+
+
+            <!-- Страница Инструкторов доступна только администраторам -->
+            <li class="header-page_li" th:if="${client.isAdmin}">
+                <a class="header-page-link" href="/instructors">
+                    <span class="header-page-text">Инструкторы</span>
+                </a>
+            </li>
+
+            <!-- Страница Расписания занятий доступна всем пользователям -->
+            <li class="header-page_li">
+                <a class="header-page-link" href="/schedule">
+                    <span class="header-page-text">Расписание занятий</span>
+                </a>
+            </li>
+
+            <!-- Страница Клиентов доступна только администраторам -->
+            <li class="header-page_li" th:if="${client.isAdmin}">
+                <a class="header-page-link" href="/clients">
+                    <span class="header-page-text">Клиенты</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Личный кабинет и Войти -->
+        <div class="header-button">
+            <a class="header-page-text button" href="/personalAccount">Личный кабинет</a>
+            <a class="header-page-text button"  href="/login">Войти</a>
+        </div>
     </div>
 </div>
-
-

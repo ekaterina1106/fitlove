@@ -23,7 +23,7 @@ public class ClientDTO {
     public ClientDTO() {
     }
 
-    public ClientDTO(int id, String name, String email, String phone, String role) {
+    public ClientDTO(int id, String name, String email, String phone, String role, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -62,4 +62,5 @@ public class ClientDTO {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
 }

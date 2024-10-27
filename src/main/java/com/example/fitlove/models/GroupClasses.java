@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "GroupClasses")
+@Table(name = "Group_Classes")
 public class GroupClasses {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +34,7 @@ public class GroupClasses {
     @DateTimeFormat(pattern = "dd-MM-yyyy") // Исправлено на правильный формат даты
     private LocalDate classDate;
 
+    @Transient
     @Column(name = "day_of_week")
     private DayOfWeek dayOfWeek;
 
@@ -142,4 +143,20 @@ public class GroupClasses {
     public void setClients(Set<Clients> clients) {
         this.clients = clients;
     }
+
+    @Override
+    public String toString() {
+        return "GroupClasses{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", classDate=" + classDate +
+                ", dayOfWeek=" + dayOfWeek +
+                ", startTime=" + startTime +
+                ", instructor=" + instructor +
+                ", clients=" + clients +
+                '}';
+    }
+
+
 }

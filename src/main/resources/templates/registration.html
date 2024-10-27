@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitlove Fitness Club</title>
+    <link rel="stylesheet" th:href="@{/static/css/style.css}" />
+</head>
+<header>
+    <div th:insert="~{blocks/header.html :: header}"></div>
+</header>
+<body>
+<div class="login-page">
+
+    <form action="/registration" th:action="@{/registration}" method="post" th:object="${client}">
+
+        <h1>Регистрация</h1>
+
+        <div class="form-group">
+            <label>ФИО пользователя:</label>
+            <input type="text" th:field="*{name}"  th:value="${client.name}" class="form-control" required>
+            <div th:if="${nameError}" class="invalid-feedback" style="color: red">
+                <span th:text="${nameError}"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Номер телефона:</label>
+            <input type="text" th:field="*{phone}" th:value="${client.phone}" class="form-control" required>
+            <div th:if="${phoneError != null}" class="invalid-feedback" style="color: red">
+                <span th:text="${phoneError}"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Эл. почта:</label>
+            <input type="email" th:field="*{email}" th:value="${client.email}" class="form-control" required>
+            <div th:if="${mailError != null}" class="invalid-feedback" style="color: red">
+                <span th:text="${mailError}"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Пароль:</label>
+            <input type="password" th:field="*{password}"  minlength="4" class="form-control" required>
+            <div th:if="${passwordError != null}" class="invalid-feedback" style="color: red">
+                <span th:text="${passwordError}"></span>
+            </div>
+        </div>
+
+        <div th:if="${errorMessage}" style="color: red;">
+            <h2 th:text="${errorMessage}"></h2>
+        </div>
+
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+        <input type="submit" value="Зарегистрироваться" class="login-button">
+
+        <div class="login-links">
+            <a href="/login">Уже есть аккаунт? Войти</a>
+        </div>
+
+
+
+    </form>
+</div>
+</body>
+</html>
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Fitlove Fitness Club</title>-->
+<!--    <link rel="stylesheet" th:href="@{/static/css/style.css}" />-->
+
+<!--</head>-->
+<!--<header>-->
+<!--    <div th:insert="~{blocks/header.html :: header}"></div>-->
+<!--</header>-->
+<!--<head>-->
+<!--    <title>Регистрация</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Регистрация</h1>-->
+<!--<form action="#" th:action="@{/registration}" method="post" th:object="${client}">-->
+<!--    <label>ФИО пользователя:</label>-->
+<!--    <input type="text" th:field="*{name}" class="${nameError != null ? 'is-invalid' : ''}" th:value="${client.name}"><br>-->
+<!--    <div th:if="${nameError != null}" style="color: red" class="invalid-feedback">-->
+<!--        <span th:text="${nameError}"></span>-->
+<!--    </div>-->
+
+<!--    <label>Эл. почта:</label>-->
+<!--    <input type="email" th:field="*{email}" th:value="${client.email}"><br>-->
+<!--    <div th:if="${mailError != null}" style="color: red" class="invalid-feedback">-->
+<!--        <span th:text="${mailError}"></span>-->
+<!--    </div>-->
+
+<!--    <label>Пароль:</label>-->
+<!--    <input type="password" th:field="*{password}"><br>-->
+<!--    <div th:if="${passwordError != null}" style="color: red" class="invalid-feedback">-->
+<!--        <span th:text="${passwordError}"></span>-->
+<!--    </div>-->
+
+<!--    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
+<!--    <button type="submit">Зарегистрироваться</button>-->
+<!--</form>-->
+
+<!--<div th:if="${errorMessage != null}">-->
+<!--    <h2 style="color: red" th:text="${errorMessage}"></h2>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->
+

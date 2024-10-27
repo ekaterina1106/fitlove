@@ -1,18 +1,23 @@
 package com.example.fitlove.models;
 
+import com.example.fitlove.models.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.management.relation.Role;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Clients")
-public class Clients {
+public class Clients implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +40,8 @@ public class Clients {
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Роль обязательна")
-    private Role role;
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    private Set<Role> role = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "Enrollments",
@@ -46,16 +52,6 @@ public class Clients {
     public Clients() {
     }
 
-    public enum Role {
-        USER, ADMIN // Пример значений
-    }
-//    public Clients(String name, String email, String password, String phone, String role) {
-//        this.name = name;
-//        this.email = email;
-//        this.password = password;
-//        this.phone = phone;
-//        this.role = role;
-//    }
 
     public int getId() {
         return id;
@@ -81,8 +77,36 @@ public class Clients {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role;
+    }
+
+
+
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
@@ -97,12 +121,13 @@ public class Clients {
         this.phone = phone;
     }
 
-    public Role getRole() {
+    public @NotNull(message = "Роль обязательна") Set<Role> getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public boolean isAdmin(){
+        return role.contains(Role.ROLE_ADMIN);
     }
+
 
 }
