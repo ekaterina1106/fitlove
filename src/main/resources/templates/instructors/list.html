@@ -9,7 +9,7 @@
     <div th:insert="~{blocks/header.html :: header}"></div>
 </header>
 <h1>Список инструкторов</h1>
-<a href="/instructors/new">Добавить нового инструктора</a>
+<a href="/instructors/new" class="button exit-button">Добавить нового инструктора</a>
 <table>
     <thead>
     <tr>
@@ -23,13 +23,18 @@
         <td th:text="${instructor.id}"></td>
         <td th:text="${instructor.name}"></td>
         <td>
-            <a th:href="@{/instructors/{id}/edit(id=${instructor.id})}">Редактировать</a>
-            <form th:action="@{/instructors/{id}/delete(id=${instructor.id})}" method="post" style="display:inline;">
-                <button type="submit">Удалить</button>
-            </form>
+            <div class="action-buttons">
+                <!-- Кнопка редактирования -->
+                <a th:href="@{/instructors/{id}/edit(id=${instructor.id})}" class="button table-button">Редактировать</a>
+                <!-- Форма для удаления -->
+                <form th:action="@{/instructors/{id}/delete(id=${instructor.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="button table-button">Удалить</button>
+                </form>
+            </div>
         </td>
     </tr>
     </tbody>
+
 </table>
 
 </body>

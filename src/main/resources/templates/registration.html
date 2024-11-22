@@ -24,13 +24,16 @@
             </div>
         </div>
 
+
         <div class="form-group">
             <label>Номер телефона:</label>
-            <input type="text" th:field="*{phone}" th:value="${client.phone}" class="form-control" required>
-            <div th:if="${phoneError != null}" class="invalid-feedback" style="color: red">
-                <span th:text="${phoneError}"></span>
-            </div>
+            <input type="text" id="phone" name="phone" class="form-control"
+                   required placeholder="+7 (___) ___-__-__"
+                   pattern="^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$"
+                   title="Введите номер в формате +7 (999) 999-99-99">
+
         </div>
+
 
         <div class="form-group">
             <label>Эл. почта:</label>
@@ -67,50 +70,37 @@
 
 
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const phoneInput = document.getElementById("phone");
+        const phoneError = document.getElementById("phoneError");
 
-<!--<!DOCTYPE html>-->
-<!--<html lang="ru" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Fitlove Fitness Club</title>-->
-<!--    <link rel="stylesheet" th:href="@{/static/css/style.css}" />-->
+        phoneInput.addEventListener("input", function (e) {
+            let value = phoneInput.value.replace(/\D/g, ""); // Удаляем все символы, кроме цифр
+            if (value.startsWith("7")) value = value.slice(1); // Удаляем лишнюю 7 в начале
 
-<!--</head>-->
-<!--<header>-->
-<!--    <div th:insert="~{blocks/header.html :: header}"></div>-->
-<!--</header>-->
-<!--<head>-->
-<!--    <title>Регистрация</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Регистрация</h1>-->
-<!--<form action="#" th:action="@{/registration}" method="post" th:object="${client}">-->
-<!--    <label>ФИО пользователя:</label>-->
-<!--    <input type="text" th:field="*{name}" class="${nameError != null ? 'is-invalid' : ''}" th:value="${client.name}"><br>-->
-<!--    <div th:if="${nameError != null}" style="color: red" class="invalid-feedback">-->
-<!--        <span th:text="${nameError}"></span>-->
-<!--    </div>-->
+            let formatted = "+7 ";
+            if (value.length > 0) formatted += "(" + value.substring(0, 3);
+            if (value.length >= 4) formatted += ") " + value.substring(3, 6);
+            if (value.length >= 7) formatted += "-" + value.substring(6, 8);
+            if (value.length >= 9) formatted += "-" + value.substring(8, 10);
 
-<!--    <label>Эл. почта:</label>-->
-<!--    <input type="email" th:field="*{email}" th:value="${client.email}"><br>-->
-<!--    <div th:if="${mailError != null}" style="color: red" class="invalid-feedback">-->
-<!--        <span th:text="${mailError}"></span>-->
-<!--    </div>-->
+            phoneInput.value = formatted;
 
-<!--    <label>Пароль:</label>-->
-<!--    <input type="password" th:field="*{password}"><br>-->
-<!--    <div th:if="${passwordError != null}" style="color: red" class="invalid-feedback">-->
-<!--        <span th:text="${passwordError}"></span>-->
-<!--    </div>-->
+            // Валидация на соответствие маске
+            const regex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+            if (regex.test(phoneInput.value)) {
+                phoneInput.setCustomValidity("");
+                phoneError.style.display = "none";
+            } else {
+                phoneInput.setCustomValidity("Номер телефона неверен");
+                phoneError.style.display = "block";
+            }
+        });
+    });
+</script>
 
-<!--    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
-<!--    <button type="submit">Зарегистрироваться</button>-->
-<!--</form>-->
 
-<!--<div th:if="${errorMessage != null}">-->
-<!--    <h2 style="color: red" th:text="${errorMessage}"></h2>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
+
+
 

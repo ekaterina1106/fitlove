@@ -1,6 +1,7 @@
 package com.example.fitlove.services;
 
 import com.example.fitlove.models.GroupClasses;
+import com.example.fitlove.models.Instructors;
 import com.example.fitlove.repositories.GroupClassesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,16 +17,46 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class GroupClassesService {
-    private final GroupClassesRepository groupClassesRepository;
 
     @Autowired
-    public GroupClassesService(GroupClassesRepository groupClassesRepository) {
+    private JdbcTemplate jdbcTemplate;
+
+    private final GroupClassesRepository groupClassesRepository;
+    private final EnrollmentsService enrollmentsService;
+
+
+    @Autowired
+    public GroupClassesService(GroupClassesRepository groupClassesRepository, EnrollmentsService enrollmentsService, JdbcTemplate jdbcTemplate) {
         this.groupClassesRepository = groupClassesRepository;
+        this.enrollmentsService = enrollmentsService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<GroupClasses> getAllGroupClasses() {
-        return groupClassesRepository.findAll();
+        String query = """
+        SELECT gc.id, gc.name, gc.description, gc.class_date, gc.start_time, i.name AS instructor_name, 
+               COUNT(e.client_id) AS enrollment_count
+        FROM Group_Classes gc
+        LEFT JOIN Enrollments e ON gc.id = e.class_id
+        LEFT JOIN Instructors i ON gc.instructor_id = i.id
+        WHERE gc.class_date >= CURRENT_DATE
+        GROUP BY gc.id, gc.name, gc.description, gc.class_date, gc.start_time, i.name
+        ORDER BY gc.class_date, gc.start_time;
+    """;
+
+        return jdbcTemplate.query(query, (rs, rowNum) -> {
+            GroupClasses groupClass = new GroupClasses();
+            groupClass.setId(rs.getInt("id"));
+            groupClass.setName(rs.getString("name"));
+            groupClass.setDescription(rs.getString("description"));
+            groupClass.setClassDate(rs.getDate("class_date").toLocalDate());
+            groupClass.setStartTime(rs.getTime("start_time").toLocalTime());
+            groupClass.setInstructor(new Instructors(rs.getString("instructor_name"))); // Обновите под свой класс Instructor
+            groupClass.setEnrollmentCount(rs.getInt("enrollment_count"));
+            return groupClass;
+        });
     }
+
 
     public Optional<GroupClasses> getGroupClassById(int id) {
         return groupClassesRepository.findById(id);
@@ -52,6 +83,10 @@ public class GroupClassesService {
 
     @Transactional
     public void deleteGroupClass(int groupClassId) {
+        // Удаляем связанные записи в таблице Enrollments
+        enrollmentsService.deleteEnrollmentsByClassId(groupClassId);
+
+        // Удаляем групповое занятие
         groupClassesRepository.deleteById(groupClassId);
     }
 
@@ -90,6 +125,21 @@ public class GroupClassesService {
                 LocalTime.of(16, 0)
         );
     }
+
+
+    @Transactional(readOnly = true)
+    public boolean isTimeSlotOccupied(LocalDate classDate, LocalTime startTime) {
+        return groupClassesRepository.existsByClassDateAndStartTime(classDate, startTime);
+    }
+
+
+    public List<GroupClasses> getUpcomingClasses() {
+        LocalDate today = LocalDate.now();
+        return groupClassesRepository.findByClassDateAfterOrderByClassDateAsc(today);
+    }
+
+
+
 
 }
 

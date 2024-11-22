@@ -40,7 +40,7 @@ public class GroupClassesController {
     @GetMapping
     public String listClasses(Model model, Principal principal) {
         model.addAttribute("client", clientsService.getUserByPrincipal(principal));
-        List<GroupClasses> classes = groupClassesService.getAllGroupClasses();
+        List<GroupClasses> classes = groupClassesService.getUpcomingClasses();
         model.addAttribute("classes", classes);
         return "class/class_list";
     }
@@ -66,17 +66,22 @@ public class GroupClassesController {
                             BindingResult bindingResult, Model model, Principal principal) {
         model.addAttribute("client", clientsService.getUserByPrincipal(principal));
         List<Instructors> instructors = instructorsService.getAllInstructors();
-        System.out.println("Instructors: " + instructors);
         model.addAttribute("instructors", instructors);
-        if (bindingResult.hasErrors()) {
 
+        // Проверка на наличие занятие с таким же временем
+        if (groupClassesService.isTimeSlotOccupied(groupClass.getClassDate(), groupClass.getStartTime())) {
+            bindingResult.rejectValue("startTime", "error.groupClass", "В это время занятие уже запланировано.");
+        }
+
+        if (bindingResult.hasErrors()) {
             return "class/class_create"; // Возвращаем на страницу создания с ошибками
         }
 
-        // Убедитесь, что объект instructor правильно установлен
         groupClassesService.saveGroupClass(groupClass);
         return "redirect:/classes"; // Перенаправление после успешного сохранения
     }
+
+
 
     @PreAuthorize("hasRole('ADMIN')")
     // Форма редактирования существующего занятия
@@ -112,5 +117,6 @@ public class GroupClassesController {
         groupClassesService.deleteGroupClass(id);
         return "redirect:/classes";
     }
+
 
 }

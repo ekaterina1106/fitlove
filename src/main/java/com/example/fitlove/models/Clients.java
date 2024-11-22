@@ -35,7 +35,6 @@ public class Clients implements UserDetails {
     @Size(min = 4, message = "Пароль должен быть не менее 4 символов")
     private String password;
 
-
     private String phone;
 
     @Enumerated(EnumType.STRING)

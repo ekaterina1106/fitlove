@@ -116,9 +116,9 @@ public class GroupClasses {
         this.dayOfWeek = classDate.getDayOfWeek();
     }
 
-    public DayOfWeek getDayOfWeek() {
-        return dayOfWeek;
-    }
+//    public DayOfWeek getDayOfWeek() {
+//        return dayOfWeek;
+//    }
 
     public LocalTime getStartTime() {
         return startTime;
@@ -156,6 +156,23 @@ public class GroupClasses {
                 ", instructor=" + instructor +
                 ", clients=" + clients +
                 '}';
+    }
+
+
+    @Transient
+    private int enrollmentCount; // новое поле для количества записей
+
+    // геттер и сеттер для enrollmentCount
+    public int getEnrollmentCount() {
+        return enrollmentCount;
+    }
+
+    public void setEnrollmentCount(int enrollmentCount) {
+        this.enrollmentCount = enrollmentCount;
+    }
+
+    public DayOfWeek getDayOfWeek() {
+        return classDate.getDayOfWeek(); // Возвращаем день недели на основе classDate
     }
 
 

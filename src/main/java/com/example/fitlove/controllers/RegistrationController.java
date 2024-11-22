@@ -32,7 +32,12 @@ public class RegistrationController {
     @GetMapping("/registration")
     public String registration(Model model, Principal principal){
         model.addAttribute("title", "Страница регистрации");
-        model.addAttribute("client", clientsService.getUserByPrincipal(principal));
+
+        // Создаем новый объект Clients, если пользователь не авторизован
+        Clients client = (principal != null) ? clientsService.getUserByPrincipal(principal) : new Clients();
+        model.addAttribute("client", client);
+
+
         System.out.println("get method");
         return "registration";
 
@@ -70,39 +75,5 @@ public class RegistrationController {
 
 
 
-//    @PostMapping("/registration")
-//    public String createUser(@Valid Clients client, BindingResult bindingResult, Model model, HttpSession session){
-//        System.out.println("post method");
-////        model.addAttribute("user", clientsService.getUserByPrincipal(principal));
-//
-//        model.addAttribute("client", client);
-//        if (bindingResult.hasErrors()){
-//            System.out.println("some error in br");
-//            Collector<FieldError, ?, Map<String, String>> collector = Collectors.toMap(
-//                    fieldError -> fieldError.getField() + "Error",
-//                    FieldError::getDefaultMessage
-//            );
-//            Map<String, String> errorsMap = bindingResult.getFieldErrors().stream().collect(collector);
-//            model.mergeAttributes(errorsMap);
-//            return "registration";
-////            bindingResult.getFieldErrors().stream().collect(Collectors.toMap(
-////                    fieldError -> fieldError.getField() + "Error",
-////                    FieldError::getDefaultMessage
-////            ))
-////            model.addAttribute("bindingResult", bindingResult);
-////            return "registration";
-//        } else {
-//            System.out.println("visov createuser");
-//            String message = clientsService.createUser(client);
-//            if (message.equals("true")){
-//                session.setAttribute("successMessage", "Успешная регистрация");
-//                System.out.println("success registration");
-//                return "redirect:/login";
-//            }else {
-//                model.addAttribute("errorMessage", "Аккаунт с такой почтой уже есть");
-//                model.addAttribute("bindingResult", bindingResult);
-//                return "registration";
-//            }
-//        }
-//    }
+
 }

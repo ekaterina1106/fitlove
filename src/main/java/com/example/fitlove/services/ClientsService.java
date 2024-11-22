@@ -40,10 +40,12 @@ public class ClientsService {
         return message;
     }
 
+
     public Clients getUserByPrincipal(Principal principal) {
-        if (principal == null) return new Clients();
+        if (principal == null) return null;
         return clientsRepository.findByEmail(principal.getName());
     }
+
 
     // Получение всех клиентов
     public List<Clients> getAllClients() {

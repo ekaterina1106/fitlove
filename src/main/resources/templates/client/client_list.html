@@ -9,7 +9,7 @@
     <div th:insert="~{blocks/header.html :: header}"></div>
 </header>
 <h1>Список клиентов</h1>
-<a href="/clients/new">Добавить клиента</a>
+<!--<a href="/clients/new">Добавить клиента</a>-->
 
 <table>
     <thead>
@@ -28,9 +28,9 @@
         <td th:text="${client.email}"></td>
         <td th:text="${client.phone}"></td>
         <td>
-            <a th:href="@{/clients/{id}/edit(id=${client.id})}">Редактировать</a>
+<!--            <a th:href="@{/clients/{id}/edit(id=${client.id})}">Редактировать</a>-->
             <form th:action="@{/clients/{id}/delete(id=${client.id})}" method="post" style="display:inline;">
-                <button type="submit">Удалить</button>
+                <button type="submit" class="button table-button">Удалить</button>
             </form>
         </td>
     </tr>

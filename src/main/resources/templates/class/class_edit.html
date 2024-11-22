@@ -11,7 +11,7 @@
 </header>
 <h1>Редактирование занятия</h1>
 
-<form th:action="@{/classes/{id}(id=${groupClass.id})}" th:object="${groupClass}" method="post">
+<form th:action="@{/classes/{id}(id=${groupClass.id})}" th:object="${groupClass}" method="post" class="form-create-edit">
   <div>
     <label for="name">Название занятия:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Введите название занятия" required>
@@ -42,11 +42,6 @@
     <span th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}">Ошибка</span>
   </div>
 
-<!--  <div>-->
-<!--    <label for="startTime">Время начала:</label>-->
-<!--    <input type="time" id="startTime" th:field="*{startTime}" required>-->
-<!--    <span th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}">Ошибка</span>-->
-<!--  </div>-->
 
   <div>
     <label for="instructor">Инструктор:</label>

@@ -9,7 +9,7 @@
   <div th:insert="~{blocks/header.html :: header}"></div>
 </header>
 <h1>Редактировать инструктора</h1>
-<form th:action="@{/instructors/{id}(id=${instructor.id})}" th:object="${instructor}" method="post">
+<form th:action="@{/instructors/{id}(id=${instructor.id})}" th:object="${instructor}" method="post" class="form-create-edit">
   <div>
     <label for="name">Имя:</label>
     <input type="text" id="name" th:field="*{name}" required />

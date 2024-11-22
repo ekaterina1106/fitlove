@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fitlove Fitness Club</title>
-    <link rel="stylesheet" th:href="@{/static/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/static/css/style.css}"/>
 </head>
 <body>
 <header>
@@ -19,7 +19,7 @@
         <th>Время</th>
         <th th:each="date, iterStat : ${weekDates}">
             <span th:text="${date}"></span>
-            <br />
+            <br/>
             <span th:text="${dayOfWeek[iterStat.index]}"></span>
         </th>
     </tr>
@@ -27,15 +27,24 @@
     <tbody>
     <tr th:each="time : ${times}">
         <td th:text="${time}"></td> <!-- Строка времени -->
-
         <td th:each="date : ${weekDates}">
-            <span th:each="class : ${classes}"
-                  th:if="${class.classDate.equals(date) and class.startTime.equals(time)}"
-                  th:attr="data-class-id=${class.id}, data-name=${class.name}, data-description=${class.description}, data-instructor=${class.instructor.name}"
-                  class="clickable"
-                  onclick="openModal(this)">
-                <span th:text="${class.name}"></span> <!-- Название занятия -->
-            </span>
+            <div th:each="class : ${classes}"
+                 th:if="${class != null and class.classDate.equals(date) and class.startTime.equals(time)}"
+                 th:classappend="${clientEnrollments != null and clientEnrollments.contains(class.id) ? 'enrolled' : ''}"
+                 th:attr="data-class-id=${class.id},
+              data-name=${class.name},
+              data-description=${class.description},
+              data-instructor=${class.instructor.name},
+              data-enrolled=${clientEnrollments != null and clientEnrollments.contains(class.id)},
+              data-enrollment-count=${class.enrollmentCount},
+              data-max-participants=${maxCapacity},
+              title=${clientEnrollments != null and clientEnrollments.contains(class.id) ? 'Вы записаны на это занятие' : ''}"
+                 class="clickable cell-content"
+                 onclick="openModal(this)">
+                <span th:text="${class.name}"></span>
+            </div>
+
+
         </td>
     </tr>
     </tbody>
@@ -48,219 +57,111 @@
         <h2 id="className"></h2>
         <p><strong>Описание:</strong> <span id="classDescription"></span></p>
         <p><strong>Инструктор:</strong> <span id="classInstructor"></span></p>
+        <p><strong>Занято мест:</strong> <span id="classPlaces"></span></p>
 
-        <!-- Форма для записи на занятие -->
-        <form id="enrollForm" method="post" th:action="@{/schedule/enroll}">
-            <input type="hidden" id="classId" name="classId" value="">
-            <button type="submit">Записаться</button>
-        </form>
+        <!-- Если пользователь не авторизован -->
+        <div th:if="${client?.id == null}">
+            <p>Чтобы записаться на занятие, пожалуйста, авторизуйтесь.</p>
+        </div>
+
+        <!-- Для клиента -->
+        <div th:if="${client?.id != null and not client?.role.contains(T(com.example.fitlove.models.enums.Role).ROLE_ADMIN)}">
+            <form id="enrollForm" th:action="@{/schedule/enroll}" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                <input type="hidden" id="classId" name="classId" value="">
+                <button type="submit" id="enrollButton" class="cancel-button">Записаться</button> <!-- Кнопка отмены будет красной, когда пользователь записан на занятие -->
+
+            </form>
+        </div>
+
+        <!-- Для администратора -->
+        <div th:if="${client?.id != null and client?.role.contains(T(com.example.fitlove.models.enums.Role).ROLE_ADMIN)}">
+            <form id="deleteForm" th:action="@{/schedule/{id}/delete(id=${classId})}" method="post" style="display:inline;">
+                <button type="submit" class="delete-button">Удалить</button> <!-- Это кнопка удаления -->
+            </form>
+        </div>
+
+
     </div>
 </div>
 
-
-</body>
-</html>
 <script>
-    // Функция для открытия модального окна
-    // Функция для открытия модального окна
     function openModal(element) {
-        var modal = document.getElementById("classModal");
-        var className = element.getAttribute("data-name");
-        var classDescription = element.getAttribute("data-description");
-        var classInstructor = element.getAttribute("data-instructor");
-        var classId = element.getAttribute("data-class-id"); // Получаем ID занятия
+        try {
+            const modal = document.getElementById("classModal");
+            const className = element.getAttribute("data-name");
+            const classDescription = element.getAttribute("data-description");
+            const classInstructor = element.getAttribute("data-instructor");
+            const classId = element.getAttribute("data-class-id");
+            const enrollmentCount = element.getAttribute("data-enrollment-count");
+            const maxParticipants = element.getAttribute("data-max-participants");
 
-        console.log("Class Name:", className); // Для отладки
-        console.log("Class Description:", classDescription); // Для отладки
-        console.log("Class Instructor:", classInstructor); // Для отладки
-        console.log("Class ID:", classId); // Для отладки
+            // Обновление содержимого модального окна
+            document.getElementById("className").textContent = className;
+            document.getElementById("classDescription").textContent = classDescription;
+            document.getElementById("classInstructor").textContent = classInstructor;
+            document.getElementById("classPlaces").textContent = `${enrollmentCount} / ${maxParticipants}`;
 
-        // Проверяем, есть ли значение classId
-        if (classId) {
-            console.log("ID занятия корректен:", classId);
-        } else {
-            console.error("ID занятия отсутствует!");
+            // Работа с формой для записи/отмены
+            const enrollForm = document.getElementById("enrollForm");
+            const enrollButton = document.getElementById("enrollButton");
+            const clientIsEnrolled = element.getAttribute("data-enrolled") === "true";
+            const remainingPlaces = maxParticipants - enrollmentCount;
+
+// Если клиент записан на занятие
+            if (enrollForm) {
+                document.getElementById("classId").value = classId;
+
+                // Если клиент записан на занятие
+                if (clientIsEnrolled) {
+                    enrollButton.textContent = "Отменить";
+                    enrollForm.action = "/schedule/cancel"; // путь для отмены записи
+                    enrollButton.className = "cancel-button"; // Устанавливаем класс для красной кнопки "Отменить"
+                    enrollButton.disabled = false; // Активируем кнопку
+                } else {
+                    // Если мест осталось больше 0, пользователь может записаться
+                    if (remainingPlaces > 0) {
+                        enrollButton.textContent = "Записаться";
+                        enrollForm.action = "/schedule/enroll"; // путь для записи
+                        enrollButton.className = ""; // Убираем дополнительные классы
+                        enrollButton.disabled = false; // Кнопка активна
+                    } else {
+                        // Если мест нет, отображаем кнопку "Нет мест"
+                        enrollButton.textContent = "Нет мест";
+                        enrollButton.className = "no-places"; // Устанавливаем класс для стиля "Нет мест"
+                        enrollButton.disabled = true; // Блокируем кнопку
+                    }
+                }
+            }
+
+
+
+            // Админская форма удаления
+            const deleteForm = document.getElementById("deleteForm");
+            if (deleteForm) {
+                deleteForm.action = `/schedule/${classId}/delete`;
+            }
+
+            modal.style.display = "block";
+        } catch (e) {
+            console.error("Error opening modal:", e);
         }
-
-        document.getElementById("className").textContent = className;
-        document.getElementById("classDescription").textContent = classDescription;
-        document.getElementById("classInstructor").textContent = classInstructor;
-
-        // Устанавливаем ID занятия в скрытое поле формы
-        document.getElementById("classId").value = classId;
-
-        modal.style.display = "block";
     }
 
 
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelector(".close").onclick = function() {
-            document.getElementById("classModal").style.display = "none";
-        }
+    // Закрытие модального окна
+    document.querySelector(".close").onclick = function () {
+        const modal = document.getElementById("classModal");
+        modal.style.display = "none";
+    };
 
-        window.onclick = function(event) {
-            var modal = document.getElementById("classModal");
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
+    // Закрытие при клике вне модального окна
+    window.onclick = function (event) {
+        const modal = document.getElementById("classModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
         }
-    });
+    };
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="ru" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Fitlove Fitness Club</title>-->
-<!--    <link rel="stylesheet" href="/css/style.css" />-->
-<!--</head>-->
-<!--<body>-->
-<!--<header>-->
-<!--    <div th:insert="~{blocks/header.html :: header}"></div>-->
-<!--</header>-->
-
-<!--<h1>Расписание групповых занятий</h1>-->
-
-<!--<table>-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--        <th>Время</th>-->
-<!--        <th th:each="date, iterStat : ${weekDates}">-->
-<!--            <span th:text="${date}"></span>-->
-<!--            <br>-->
-<!--            <span th:text="${dayOfWeek[iterStat.index]}"></span>-->
-<!--        </th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    <tr th:each="time : ${times}">-->
-<!--        <td th:text="${time}"></td> &lt;!&ndash; Строка времени &ndash;&gt;-->
-<!--        <td th:each="date : ${weekDates}">-->
-<!--            <span th:each="class : ${classes}"-->
-<!--                  th:if="${class.classDate.equals(date) and class.startTime.equals(time)}"-->
-<!--                  th:attr="data-name=${class.name}, data-description=${class.description}, data-instructor=${class.instructor.name}"-->
-<!--                  class="clickable"-->
-<!--                  onclick="openModal(this)"-->
-<!--                  th:text="${class.name}"></span> &lt;!&ndash; Кликабельная ячейка &ndash;&gt;-->
-<!--        </td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
-
-
-<!--&lt;!&ndash; Модальное окно &ndash;&gt;-->
-<!--<div id="classModal" class="modal" style="display:none;">-->
-<!--    <div class="modal-content">-->
-<!--        <span class="close">&times;</span>-->
-<!--        <h2 id="className"></h2>-->
-<!--        <p><strong>Описание:</strong> <span id="classDescription"></span></p>-->
-<!--        <p><strong>Инструктор:</strong> <span id="classInstructor"></span></p>-->
-<!--    </div>-->
-<!--</div>-->
-
-
-<!--</body>-->
-<!--</html>-->
-
-<!--<script>-->
-<!--    // Функция для открытия модального окна-->
-<!--    function openModal(element) {-->
-<!--        var modal = document.getElementById("classModal");-->
-<!--        document.getElementById("className").textContent = element.getAttribute("data-name");-->
-<!--        document.getElementById("classDescription").textContent = element.getAttribute("data-description");-->
-<!--        document.getElementById("classInstructor").textContent = element.getAttribute("data-instructor");-->
-<!--        modal.style.display = "block";-->
-<!--    }-->
-
-<!--    // Функция для закрытия модального окна-->
-<!--    document.querySelector(".close").onclick = function() {-->
-<!--        document.getElementById("classModal").style.display = "none";-->
-<!--    }-->
-
-<!--    // Закрытие окна при клике вне его-->
-<!--    window.onclick = function(event) {-->
-<!--        var modal = document.getElementById("classModal");-->
-<!--        if (event.target == modal) {-->
-<!--            modal.style.display = "none";-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="ru" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Fitlove Fitness Club</title>-->
-<!--    <link rel="stylesheet" href="/css/style.css" />-->
-<!--</head>-->
-<!--<body>-->
-<!--<header>-->
-<!--    <div th:insert="~{blocks/header.html :: header}"></div>-->
-<!--</header>-->
-
-<!--<h1>Расписание групповых занятий</h1>-->
-
-<!--<table>-->
-<!--    <thead>-->
-<!--    <tr>-->
-<!--        <th>Время</th> &lt;!&ndash; Строки будут временем &ndash;&gt;-->
-<!--        <th th:each="date, iterStat : ${weekDates}">-->
-<!--            <span th:text="${date}"></span> &lt;!&ndash; Отображение даты &ndash;&gt;-->
-<!--            <br>-->
-<!--            <span th:text="${dayOfWeek[iterStat.index]}"></span> &lt;!&ndash; Отображение дня недели &ndash;&gt;-->
-<!--        </th>-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    <tr th:each="time : ${times}">-->
-<!--        <td th:text="${time}"></td> &lt;!&ndash; Строка времени &ndash;&gt;-->
-<!--        <td th:each="date : ${weekDates}">-->
-<!--            <span th:each="class : ${classes}"-->
-<!--                  th:if="${class.classDate.equals(date) and class.startTime.equals(time)}"-->
-<!--                  th:text="${class.name}"></span>-->
-<!--        </td>-->
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
-
-
-
-<!--</body>-->
-<!--</html>-->
-
-
-
-
-
+</body>
+</html>

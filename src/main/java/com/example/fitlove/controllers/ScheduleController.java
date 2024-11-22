@@ -3,30 +3,30 @@ package com.example.fitlove.controllers;
 import com.example.fitlove.models.Clients;
 import com.example.fitlove.models.GroupClasses;
 
+import com.example.fitlove.models.enums.Role;
 import com.example.fitlove.services.ClientsService;
 import com.example.fitlove.services.EnrollmentsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import com.example.fitlove.services.GroupClassesService;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequestMapping("/schedule")
 @Controller
 public class ScheduleController {
+
+    @Value("${class.max-capacity}")
+    private int maxCapacity;
 
     private final GroupClassesService groupClassesService;
     private final EnrollmentsService enrollmentsService;
@@ -40,18 +40,38 @@ public class ScheduleController {
     }
 
 
+
     @GetMapping()
-    public String showSсhedule(Model model, Principal principal) {
-        model.addAttribute("client", clientsService.getUserByPrincipal(principal));
+    public String showSchedule(Model model, Principal principal) {
+        Clients client = clientsService.getUserByPrincipal(principal);
+        model.addAttribute("client", client);
+
+        model.addAttribute("maxCapacity", maxCapacity);
+
         List<LocalDate> weekDates = groupClassesService.getWeekDates();
         model.addAttribute("weekDates", weekDates);
         model.addAttribute("dayOfWeek", groupClassesService.getWeekDays(weekDates));
-//        System.out.println(groupClassesService.getWeekDays(weekDates) + " week days");
         model.addAttribute("times", groupClassesService.getTimes());
-        model.addAttribute("classes", groupClassesService.getAllGroupClasses());
-//        System.out.println(model.getAttribute("classes"));
+//        model.addAttribute("classes", groupClassesService.getAllGroupClasses());
+        List<GroupClasses> classes = groupClassesService.getAllGroupClasses();
+        classes.forEach(groupClass -> {
+            int enrollmentCount = enrollmentsService.getEnrollmentCountForClass(groupClass.getId());
+            groupClass.setEnrollmentCount(enrollmentCount); // Поле enrollmentCount должно быть в GroupClasses
+        });
+        model.addAttribute("classes", classes);
+
+
+
+        // Инициализируем clientEnrollments пустым списком, если клиент не авторизован или у него нет записей
+        List<Integer> clientEnrollments = client != null ? enrollmentsService.getClientEnrollments(client.getId()) : Collections.emptyList();
+        model.addAttribute("clientEnrollments", clientEnrollments);
+
+
         return "schedule/schedule";
     }
+
+
+
 
     @PostMapping("/enroll")
     public String enrollClient(@RequestParam(value = "classId") String classId, Model model, Principal principal) {
@@ -82,10 +102,21 @@ public class ScheduleController {
         return "redirect:/schedule?success=enrolled";
     }
 
+    @PostMapping("/cancel")
+    public String cancelEnrollment(@RequestParam int classId, Principal principal) {
+        Clients client = clientsService.getUserByPrincipal(principal);
+        enrollmentsService.cancelEnrollment(classId, client.getId());
+        return "redirect:/schedule";
+    }
 
 
-
-
-
+    @PreAuthorize("hasRole('ADMIN')")
+    // Удаление занятия
+    @PostMapping("/{id}/delete")
+    public String deleteClass(@PathVariable int id, Model model, Principal principal) {
+        model.addAttribute("client", clientsService.getUserByPrincipal(principal));
+        groupClassesService.deleteGroupClass(id);
+        return "redirect:/schedule";
+    }
 
 }

@@ -66,7 +66,7 @@ header {
 
 /* Кнопка "Личный кабинет" */
 .button {
-    background-color: #7d2ae8; /* Фиолетовый фон */
+    background-color: #a17cd1; /* Фиолетовый фон */
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -80,7 +80,7 @@ header {
 }
 
 .button:hover {
-    background-color: #6b23d3; /* Более темный фиолетовый при наведении */
+    background-color: #6c4e9a; /* Более темный фиолетовый при наведении */
 }
 
 .button:active {
@@ -140,11 +140,11 @@ footer {
 }
 
 .input_box input:focus {
-    border-color: #7d2ae8;
+    border-color: #a17cd1;
 }
 
 .form_container .button {
-    background: #7d2ae8;
+    background: #a17cd1;
     margin-top: 30px;
     width: 100%;
     padding: 10px 0;
@@ -157,25 +157,41 @@ table {
     background-color: rgba(255, 255, 255, 0.9); /* Полупрозрачный фон */
     border-radius: 10px; /* Закругленные углы */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+
+
+    table-layout: fixed;
 }
 
 thead th {
-    background-color: #7d2ae8; /* Фиолетовый заголовок */
+    background-color: #a17cd1; /* Фиолетовый заголовок */
     color: #fff; /* Белый текст */
     padding: 10px;
     text-transform: uppercase; /* Заглавные буквы */
 }
 
 tbody td {
-    padding: 10px;
+    padding: 1px;
     text-align: center; /* Центрирование текста */
     border: 1px solid #ddd; /* Легкая граница между ячейками */
     background-color: #f9f9f9; /* Светло-серый фон */
+    height: 50px; /* Установите нужную высоту */
+
 }
 
 tbody tr:nth-child(even) td {
     background-color: #f2f2f2; /* Полосатая раскраска строк */
 }
+
+
+thead th:first-child, tbody td:first-child {
+    width: 8%; /* Установите меньшую ширину для первого столбца */
+}
+
+thead th:nth-child(n+2), tbody td:nth-child(n+2) {
+    width: auto; /* Оставляем остальные столбцы с одинаковой шириной */
+}
+
+
 
 tbody td ul {
     list-style: none;
@@ -195,6 +211,7 @@ tbody td li span {
 /* Стили для заголовка времени */
 thead th, tbody td {
     font-size: 14px;
+
 }
 
 tbody tr td:first-child {
@@ -238,10 +255,113 @@ tbody tr td:first-child {
     cursor: pointer;
 }
 
+/* Стили для текста в модальном окне */
+.modal-content h2 {
+    font-size: 24px; /* Увеличиваем размер шрифта заголовка */
+    margin-bottom: 15px; /* Отступ снизу */
+    color: #30243e; /* Тёмный цвет для заголовка */
+    text-align: center; /* Центрируем заголовок */
+}
+
+.modal-content p {
+    font-size: 16px; /* Размер шрифта для текста */
+    line-height: 1.6; /* Межстрочное расстояние */
+    margin-bottom: 10px; /* Отступы между абзацами */
+    color: #333; /* Темно-серый цвет текста */
+}
+
+/* Добавляем отступы к тегам <strong> внутри текста */
+.modal-content p strong {
+    font-weight: bold;
+    color: #30243e; /* Цвет для текста сильного акцента */
+}
+
+/* Для всех кнопок в модальном окне */
+.modal-content button {
+    font-size: 16px; /* Размер шрифта */
+    padding: 10px 20px; /* Отступы внутри кнопки */
+    background-color: #30243e; /* Основной цвет для кнопки */
+    color: white; /* Цвет текста кнопки */
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Закругленные углы */
+    cursor: pointer; /* Курсор в виде руки */
+    transition: background-color 0.3s ease;
+}
+
+/* Кнопка "Записаться" */
+#enrollButton {
+    background-color: #30243e; /* Основной цвет для кнопки записи */
+}
+
+#enrollButton:hover {
+    background-color: #6c4e9a; /* Цвет кнопки при наведении */
+}
+
+/* Кнопка "Удалить" - красный фон */
+.modal-content form button[type="submit"].delete-button {
+    background-color: #d9534f; /* Красный фон */
+}
+
+.modal-content form button[type="submit"].delete-button:hover {
+    background-color: #c9302c; /* Тёмно-красный при наведении */
+}
+
+/* Кнопка "Отменить" - красный фон */
+.modal-content form button[type="submit"].cancel-button {
+    background-color: #d9534f; /* Красный фон */
+}
+
+.modal-content form button[type="submit"].cancel-button:hover {
+    background-color: #c9302c; /* Тёмно-красный при наведении */
+}
+
+
+/* Стили для кнопки "Нет мест" */
+.modal-content button.no-places {
+    background-color: transparent !important; /* Прозрачный фон */
+    color: #d9534f !important; /* Красный цвет текста */
+    border: 2px solid #d9534f !important; /* Красная рамка */
+    cursor: not-allowed; /* Курсор "недоступно" */
+    font-size: 16px; /* Размер шрифта */
+    padding: 10px 20px; /* Отступы */
+    border-radius: 5px; /* Закругленные углы */
+    text-align: center; /* Центрирование текста */
+}
+
+
+/* При наведении на кнопку "Нет мест" ничего не происходит */
+.modal-content button.no-places:hover {
+    background-color: transparent;
+    color: #d9534f; /* Оставляем красный цвет при наведении */
+}
+
+
+
+
+
+
+/* Убираем подчеркивание текста */
+.clickable span {
+    text-decoration: none;
+    font-weight: 500;
+    color: #333;
+
+}
+
+/* Ячейка занятия */
 .clickable {
     cursor: pointer;
-    text-decoration: underline;
+    padding: 11px;
+    position: relative; /* Убедитесь, что это здесь есть */
+    transition: box-shadow 0.3s ease; /* Плавный переход для тени */
 }
+
+/* Тень при наведении */
+.clickable:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Добавьте тень при наведении */
+}
+
+
 
 
 /* Центрируем форму на странице и добавляем отступ сверху */
@@ -289,7 +409,7 @@ tbody tr td:first-child {
 .login-page .login-button {
     width: 100%;
     padding: 10px;
-    background-color: #7d2ae8;
+    background-color: #a17cd1;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -298,7 +418,7 @@ tbody tr td:first-child {
 }
 
 .login-page .login-button:hover {
-    background-color: #6b23d3;
+    background-color: #6c4e9a;
 }
 
 /* Убираем стили для кнопок, делаем их текстовыми ссылками в одну строку */
@@ -308,7 +428,7 @@ tbody tr td:first-child {
 }
 
 .login-page .login-links a {
-    color: #7d2ae8;
+    color: #a17cd1;
     text-decoration: none;
     font-size: 14px;
     padding: 0;
@@ -319,5 +439,240 @@ tbody tr td:first-child {
 }
 
 .login-page .login-links a:hover {
-    color: #6b23d3; /* Меняем цвет при наведении */
+    color: #6c4e9a; /* Меняем цвет при наведении */
 }
+
+
+ .enrolled {
+     position: relative;
+     color: black; /* Цвет для иконки */
+     font-weight: bold;
+ }
+
+/* Значок для записанных занятий */
+.enrolled::after {
+    content: "★"; /* Значок звезды */
+    color: #FFD700; /* Золотой цвет для значка */
+    font-size: 1.2em;
+    position: absolute;
+    top: -5px; /* Уменьшите значение, чтобы поднять значок */
+    right: 2px; /* Уменьшите значение, чтобы сместить значок правее */
+    font-family: 'Arial', sans-serif;
+}
+
+
+
+/* Стили для всплывающего сообщения */
+#popupMessage {
+    position: fixed;
+    top: 85px; /* Расположение под header (если height header 60px) */
+    left: 0;
+    width: 100%; /* Сообщение на всю ширину */
+    z-index: 1050; /* Позиционирование поверх других элементов */
+    background-color: rgba(116, 227, 136, 0.7); /* Полупрозрачный зеленый цвет */
+    color: white; /* Белый текст */
+    padding: 5px 5px; /* Отступы внутри сообщения */
+    font-family: Arial, sans-serif; /* Шрифт */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень для выделения */
+    opacity: 0;
+    transition: opacity 0.5s ease; /* Плавный переход для появления */
+}
+
+#popupMessage.show {
+    opacity: 1; /* Показываем сообщение */
+}
+
+#popupMessage .close {
+    color: white; /* Цвет крестика */
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+#popupMessage .close:hover {
+    color: #e2e6ea; /* Цвет крестика при наведении */
+}
+
+
+
+
+
+
+/* Специальные стили для кнопки "Выйти из личного кабинета" */
+.exit-button {
+    font-weight: normal; /* Текст не жирный */
+    font-size: 15px; /* Размер шрифта */
+    padding: 8px 16px; /* Внутренние отступы */
+    border-radius: 10px; /* Закругленные углы */
+    margin-left: 10px; /* Отступ слева */
+    background-color: #30243e; /* Фон кнопки */
+    color: #fff; /* Цвет текста */
+    border: none; /* Убираем границу */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Плавный переход для цвета и тени */
+    text-rendering: optimizeLegibility; /* Улучшение рендеринга текста */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    cursor: pointer; /* Курсор в виде руки */
+}
+
+.exit-button:hover {
+    background-color: #6c4e9a; /* Изменение фона при наведении */
+    color: #fff; /* Оставляем текст белым */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Увеличиваем тень */
+}
+
+.exit-button:active {
+    background-color: #583b7a; /* Более тёмный фон при нажатии */
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2); /* Уменьшаем тень */
+}
+
+/* Оптимизация сглаживания текста */
+.exit-button,
+.exit-button:hover {
+    -webkit-font-smoothing: antialiased; /* Сглаживание текста для WebKit */
+    -moz-osx-font-smoothing: grayscale; /* Сглаживание текста для macOS */
+}
+
+
+/* Стили кнопок в таблице */
+.table-button {
+    font-weight: normal; /* Текст не жирный */
+    font-size: 14px; /* Размер шрифта */
+    padding: 5px 10px; /* Внутренние отступы */
+    border-radius: 5px; /* Закругленные углы */
+    background-color: #a17cd1 !important; /* Фон кнопки */
+    color: #fff !important; /* Цвет текста */
+    border: none; /* Убираем границу */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Плавный переход для цвета и тени */
+    text-rendering: optimizeLegibility; /* Улучшение рендеринга текста */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    cursor: pointer; /* Курсор в виде руки */
+}
+
+/* Эффекты при наведении */
+.table-button:hover {
+    background-color: #6c4e9a !important; /* Изменение фона при наведении */
+    color: #fff !important; /* Оставляем текст белым */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Увеличиваем тень */
+}
+
+/* Эффекты при клике */
+.table-button:active {
+    background-color: #63468a !important; /* Более тёмный фон при нажатии */
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2); /* Уменьшаем тень */
+}
+
+/* Центрирование кнопок внутри ячейки */
+.action-buttons {
+    display: flex; /* Используем flexbox для выравнивания кнопок рядом */
+    gap: 10px; /* Отступ между кнопками */
+    justify-content: center; /* Центрируем кнопки по горизонтали */
+    align-items: center; /* Центрируем кнопки по вертикали */
+    height: 100%; /* Обеспечиваем высоту контейнера для вертикального центрирования */
+}
+
+
+/* Уникальный стиль для формы создания и редактирования */
+.form-create-edit {
+    max-width: 600px;
+    margin: 20px auto; /* Центрирование формы */
+    padding: 20px;
+    background-color: #f9f9f9; /* Светлый фон */
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    font-family: 'Poppins', Arial, sans-serif; /* Шрифты */
+}
+
+/* Отступы между полями внутри формы */
+.form-create-edit div {
+    margin-bottom: 15px;
+}
+
+/* Метки для формы */
+.form-create-edit label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Поля ввода внутри формы */
+.form-create-edit input[type="text"],
+.form-create-edit input[type="date"],
+.form-create-edit textarea,
+.form-create-edit select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Поля ввода при фокусе */
+.form-create-edit input[type="text"]:focus,
+.form-create-edit input[type="date"]:focus,
+.form-create-edit textarea:focus,
+.form-create-edit select:focus {
+    border-color: #6c4e9a;
+    box-shadow: 0 0 5px rgba(108, 78, 154, 0.5);
+    outline: none;
+}
+
+/* Ошибки валидации */
+.form-create-edit span {
+    color: #d9534f;
+    font-size: 12px;
+}
+
+/* Стили для кнопок внутри формы */
+.form-create-edit button {
+    font-weight: normal; /* Текст не жирный */
+    font-size: 15px; /* Размер шрифта */
+    padding: 8px 16px; /* Внутренние отступы */
+    border-radius: 10px; /* Закругленные углы */
+    background-color: #30243e; /* Фон кнопки */
+    color: #fff; /* Цвет текста */
+    border: none; /* Убираем границу */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Плавный переход для цвета и тени */
+    text-rendering: optimizeLegibility; /* Улучшение рендеринга текста */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    cursor: pointer; /* Курсор в виде руки */
+}
+
+/* Эффекты при наведении */
+.form-create-edit button:hover {
+    background-color: #6c4e9a; /* Изменение фона при наведении */
+    color: #fff; /* Белый текст */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Увеличиваем тень */
+}
+
+/* Эффекты при клике */
+.form-create-edit button:active {
+    background-color: #583b7a; /* Более тёмный фон при нажатии */
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2); /* Уменьшаем тень */
+}
+
+/* Оптимизация сглаживания текста */
+.form-create-edit button,
+.form-create-edit button:hover {
+    -webkit-font-smoothing: antialiased; /* Сглаживание текста для WebKit */
+    -moz-osx-font-smoothing: grayscale; /* Сглаживание текста для macOS */
+}
+
+
+/* Для "вы вошли как" */
+.custom-text {
+    text-indent: 2ch;
+    font-size: 1.2em;
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+
