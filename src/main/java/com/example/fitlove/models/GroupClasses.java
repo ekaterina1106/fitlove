@@ -31,7 +31,7 @@ public class GroupClasses {
 
     @Column(name = "class_date")
     @NotNull(message = "Дата занятия обязательна")
-    @DateTimeFormat(pattern = "dd-MM-yyyy") // Исправлено на правильный формат даты
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate classDate;
 
     @Transient

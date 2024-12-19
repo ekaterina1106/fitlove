@@ -18,7 +18,6 @@ public interface GroupClassesRepository extends JpaRepository<GroupClasses, Inte
 
     List<GroupClasses> findByClassDateAfterOrderByClassDateAsc(LocalDate date);
 
-
     @Modifying
     @Transactional
     @Query("DELETE FROM GroupClasses gc WHERE gc.instructor.id = :instructorId")
